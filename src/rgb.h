@@ -3,8 +3,6 @@
 
 #include "vec3.h"
 
-#include <iostream>
-
 //tutorial calls this "color"
 using rgb = vec3;
 

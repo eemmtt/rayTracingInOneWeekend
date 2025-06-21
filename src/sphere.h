@@ -1,14 +1,18 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include <cmath>
+
 #include "hittable.h"
 #include "vec3.h"
+#include "ray.h"
+#include "interval.h"
 
 class sphere : public hittable {
     public:
         sphere(const pt3& center, double radius) : center(center), radius (std::fmax(0,radius)) {}
 
-        bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override {
+        bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
             vec3 oc = center - r.origin();
             double a = r.direction().length_squared();
             double h = dot(r.direction(), oc);
@@ -22,9 +26,9 @@ class sphere : public hittable {
             //if + or - the root is outside range, return false early
             double sqrtd = std::sqrt(discriminant);
             double root = (h - sqrtd) / a;
-            if (root <= ray_tmin || ray_tmax <= root){
+            if (!ray_t.surrounds(root)){
                 root = (h + sqrtd) / a;
-                if (root <= ray_tmin || ray_tmax <= root){
+                if (!ray_t.surrounds(root)){
                     return false;
                 }
             }
